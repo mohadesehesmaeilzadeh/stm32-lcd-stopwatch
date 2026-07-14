@@ -19,7 +19,8 @@ stm32-lcd-stopwatch/
   Proteus/
     StopWatch.pdsprj
   docs/
-    Negar-Mohadeseh-HW4.pdf
+    PROJECT_REVIEW.md
+    GITHUB_SETUP.md
 ```
 
 Do not commit the full `Debug/` directory unless your instructor specifically asks for generated build output. If you want to provide a ready simulation file, place only the final HEX in a controlled location such as:

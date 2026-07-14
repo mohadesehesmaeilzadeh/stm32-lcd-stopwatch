@@ -164,9 +164,4 @@ Course project for a microcontroller/microprocessor class.
 
 Authors:
 
-- Negar Siah Mansour
 - Mohadeseh Esmaeilzade
-
-Instructor:
-
-- Dr. Amini
