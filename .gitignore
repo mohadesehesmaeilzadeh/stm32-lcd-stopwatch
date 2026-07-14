@@ -1,0 +1,58 @@
+# Build output
+Debug/
+Release/
+build/
+cmake-build-*/
+
+# Object and dependency files
+*.o
+*.obj
+*.d
+*.su
+*.cyclo
+*.gcno
+*.gcda
+
+# Firmware outputs
+*.elf
+*.hex
+*.bin
+*.map
+*.list
+*.lst
+*.srec
+
+# Keep release firmware only if intentionally added
+!release/
+!release/*.hex
+!release/*.bin
+
+# STM32CubeIDE / Eclipse workspace noise
+.metadata/
+.settings/
+RemoteSystemsTempFiles/
+*.launch
+*.log
+
+# Proteus temporary/user files
+*.workspace
+*.pdsprj.*.workspace
+*.PDSPRJ.*.workspace
+*.bak
+*.tmp
+*.DAT
+LastLoaded*.DBK
+
+# Editor and OS files
+.vscode/
+.idea/
+*.swp
+*.swo
+Thumbs.db
+Desktop.ini
+.DS_Store
+
+# Archives
+*.zip
+*.rar
+*.7z
