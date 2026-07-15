@@ -49,6 +49,20 @@ The web demo visualizes the same behavior as the embedded project:
 
 To run it locally, open `index.html` in a browser. If GitHub Pages is enabled for this repository, the same demo can be hosted as a static site without any backend or database.
 
+## Web Demo Screenshots
+
+### Browser Simulator Overview
+
+![Browser simulator overview](docs/images/web-demo-overview.png)
+
+This screenshot shows the initial browser demo state. The virtual LCD is paused at `00:00.000`, the STM32F401VETx chip is represented in the center of the board, and the control panel shows the same timing concepts used in the firmware: TIM2 tick, LED delay, SysTick activity, GPIO groups, and EXTI4 input.
+
+### Running Browser Simulation
+
+![Running browser stopwatch simulation](docs/images/web-demo-running.png)
+
+This screenshot shows the web simulator while the stopwatch is running. The LCD changes to `RUN`, the stopwatch counter increases, the status indicator turns green, and the simulation speed slider can be used to observe TIM2/LCD/LED behavior faster than real time. This makes the embedded project easier to explain without opening STM32CubeIDE or Proteus.
+
 ## Hardware
 
 | Part | Description |
