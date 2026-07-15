@@ -14,6 +14,7 @@ The final firmware is written with direct register access instead of HAL functio
 
 ## Features
 
+- Frontend-only interactive web demo
 - Stopwatch with millisecond counter
 - TIM2 interrupt every 1 ms for stopwatch timing
 - Start/Pause button using EXTI4 on PE4
@@ -24,6 +25,29 @@ The final firmware is written with direct register access instead of HAL functio
 - LCD refresh every 50 ms
 - Register-level GPIO, timer, SysTick, EXTI, RCC, and NVIC setup
 - Proteus simulation project included
+
+## Web Demo
+
+This repository includes a frontend-only simulator that runs directly in the browser:
+
+```text
+index.html
+styles.css
+script.js
+```
+
+The web demo visualizes the same behavior as the embedded project:
+
+- LCD display with `MM:SS.mmm RUN/PAU`
+- Start/Pause and Reset controls
+- LED speed button with the same delay sequence used in firmware
+- Animated LED and buzzer state
+- Optional browser sound for buzzer pulses
+- Runtime event log
+- SysTick, TIM2, LCD, and EXTI4 activity indicators
+- Project screenshots from Proteus and STM32CubeMX
+
+To run it locally, open `index.html` in a browser. If GitHub Pages is enabled for this repository, the same demo can be hosted as a static site without any backend or database.
 
 ## Hardware
 
@@ -126,6 +150,9 @@ docs/
   PROJECT_REVIEW.md       Detailed review and analysis
   GITHUB_SETUP.md         GitHub setup guide
   images/                 Screenshots used in this README
+index.html                Browser simulator
+styles.css                Web demo styling
+script.js                 Web demo behavior
 ```
 
 ## Build Instructions

@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>STM32 LCD Stopwatch Simulator</title>
+  <meta name="description" content="Frontend-only interactive web simulator for an STM32F401VETx LCD stopwatch project.">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <main class="app-shell">
+    <section class="simulator-band" aria-label="Interactive STM32 stopwatch simulator">
+      <div class="topbar">
+        <div>
+          <p class="eyebrow">STM32F401VETx Web Demo</p>
+          <h1>LCD Stopwatch Simulator</h1>
+        </div>
+        <div class="topbar-status" aria-live="polite">
+          <span class="status-dot" id="statusDot"></span>
+          <span id="systemStatus">Paused</span>
+        </div>
+      </div>
+
+      <div class="workbench">
+        <section class="hardware-panel" aria-label="Virtual hardware">
+          <div class="board">
+            <div class="lcd-module" aria-label="LCD screen">
+              <div class="lcd-label">LCD1 / LM016L</div>
+              <div class="lcd-screen" aria-live="polite">
+                <div id="lcdLine1">00:00.000 PAU</div>
+                <div id="lcdLine2">LED:3000 ms</div>
+              </div>
+              <div class="lcd-pins" aria-hidden="true">
+                <span>RS</span><span>E</span><span>D4</span><span>D5</span><span>D6</span><span>D7</span>
+              </div>
+            </div>
+
+            <div class="mcu-chip" aria-label="STM32 microcontroller">
+              <div class="chip-mark">ST</div>
+              <strong>STM32F401VETx</strong>
+              <span>Cortex-M4 / LQFP100</span>
+              <div class="pin-grid" aria-hidden="true">
+                <span>PB0</span><span>PB1</span><span>PB2</span><span>PB10</span>
+                <span>PB12</span><span>PB13</span><span>PB6</span><span>PC13</span>
+                <span>PE4</span><span>PE5</span><span>TIM2</span><span>EXTI4</span>
+              </div>
+            </div>
+
+            <div class="wire wire-lcd"></div>
+            <div class="wire wire-buttons"></div>
+            <div class="wire wire-led"></div>
+            <div class="wire wire-buzzer"></div>
+
+            <div class="button-bank" aria-label="Virtual push buttons">
+              <button class="round-switch" id="extiButton" type="button" aria-label="Trigger start pause button">
+                <span></span>
+              </button>
+              <button class="round-switch speed" id="speedHardwareButton" type="button" aria-label="Trigger LED speed button">
+                <span></span>
+              </button>
+              <div class="button-labels">
+                <span>PE4 EXTI4</span>
+                <span>PE5 SPEED</span>
+              </div>
+            </div>
+
+            <div class="led-cluster">
+              <div class="led" id="ledLamp" aria-label="LED indicator"></div>
+              <span>PC13 LED</span>
+            </div>
+
+            <div class="buzzer-cluster">
+              <div class="buzzer" id="buzzerLamp" aria-label="Buzzer indicator">
+                <span></span>
+              </div>
+              <span>PB6 BUZZER</span>
+            </div>
+          </div>
+
+          <div class="control-strip" aria-label="Simulator controls">
+            <button class="primary-action" id="startPauseButton" type="button">Start</button>
+            <button id="resetButton" type="button">Reset</button>
+            <button id="speedButton" type="button">Change LED Speed</button>
+            <button id="soundButton" type="button" aria-pressed="false">Sound Off</button>
+          </div>
+        </section>
+
+        <aside class="telemetry-panel" aria-label="Runtime telemetry">
+          <div class="metric-grid">
+            <div class="metric">
+              <span>Stopwatch</span>
+              <strong id="metricStopwatch">0 ms</strong>
+            </div>
+            <div class="metric">
+              <span>TIM2 Tick</span>
+              <strong>1 ms</strong>
+            </div>
+            <div class="metric">
+              <span>LED Delay</span>
+              <strong id="metricLedDelay">3000 ms</strong>
+            </div>
+            <div class="metric">
+              <span>Buzzer Rule</span>
+              <strong>Even sec</strong>
+            </div>
+          </div>
+
+          <div class="slider-row">
+            <label for="timeScale">Simulation speed</label>
+            <input id="timeScale" type="range" min="1" max="20" value="1">
+            <span id="timeScaleValue">1x</span>
+          </div>
+
+          <div class="state-list" aria-label="Peripheral states">
+            <div><span>RCC</span><strong>HSI 16 MHz</strong></div>
+            <div><span>GPIOB</span><strong>LCD + Buzzer</strong></div>
+            <div><span>GPIOC</span><strong>LED output</strong></div>
+            <div><span>GPIOE</span><strong>Button inputs</strong></div>
+            <div><span>NVIC</span><strong>TIM2 + EXTI4</strong></div>
+          </div>
+
+          <div class="timeline" aria-label="Interrupt activity">
+            <div class="timeline-row">
+              <span>SysTick</span>
+              <div class="pulse-track"><i id="systickPulse"></i></div>
+            </div>
+            <div class="timeline-row">
+              <span>TIM2</span>
+              <div class="pulse-track"><i id="tim2Pulse"></i></div>
+            </div>
+            <div class="timeline-row">
+              <span>LCD</span>
+              <div class="pulse-track"><i id="lcdPulse"></i></div>
+            </div>
+            <div class="timeline-row">
+              <span>EXTI4</span>
+              <div class="pulse-track"><i id="extiPulse"></i></div>
+            </div>
+          </div>
+        </aside>
+      </div>
+    </section>
+
+    <section class="content-band split-band">
+      <div class="section-copy">
+        <p class="eyebrow">What The Demo Shows</p>
+        <h2>Same firmware idea, visualized in the browser</h2>
+        <p>
+          The real STM32 firmware uses TIM2 for millisecond stopwatch timing, EXTI4 for the Start/Pause button,
+          SysTick for helper timing, GPIO for LCD/LED/buzzer control, and a main loop for the high-level behavior.
+          This web demo mirrors that behavior with JavaScript so the project can be understood without opening Proteus.
+        </p>
+      </div>
+      <div class="flow-grid" aria-label="Project flow">
+        <div><strong>PE4 Button</strong><span>Triggers EXTI4 and toggles RUN/PAUSE.</span></div>
+        <div><strong>TIM2</strong><span>Generates a 1 ms tick for stopwatch counting.</span></div>
+        <div><strong>Main Loop</strong><span>Updates LED timing, buzzer rule, and LCD refresh.</span></div>
+        <div><strong>LCD + Outputs</strong><span>Displays time, LED delay, LED state, and buzzer pulse.</span></div>
+      </div>
+    </section>
+
+    <section class="content-band">
+      <div class="section-heading">
+        <div>
+          <p class="eyebrow">Simulation Evidence</p>
+          <h2>Project screenshots</h2>
+        </div>
+      </div>
+      <div class="gallery">
+        <article>
+          <img src="docs/images/proteus-schematic-overview.png" alt="Proteus schematic overview of the STM32 stopwatch circuit">
+          <h3>Proteus schematic overview</h3>
+          <p>The full circuit wiring: STM32F401VETx, LCD, buttons, LED, buzzer, speaker model, reset/boot resistors, power, and ground.</p>
+        </article>
+        <article>
+          <img src="docs/images/proteus-running-stopwatch.png" alt="Proteus simulation running with LCD stopwatch output">
+          <h3>Running stopwatch simulation</h3>
+          <p>The LCD shows elapsed time and LED delay while the simulated hardware runs the stopwatch firmware behavior.</p>
+        </article>
+        <article>
+          <img src="docs/images/cubemx-pinout-configuration.png" alt="STM32CubeMX pinout configuration for the stopwatch project">
+          <h3>STM32CubeMX pinout</h3>
+          <p>The configured GPIO and timer pins used by the project, including PE4, PE5, PC13, PB6, and LCD control lines.</p>
+        </article>
+      </div>
+    </section>
+
+    <section class="content-band console-band" aria-label="Runtime event log">
+      <div>
+        <p class="eyebrow">Runtime Trace</p>
+        <h2>Event log</h2>
+      </div>
+      <ol class="event-log" id="eventLog"></ol>
+    </section>
+  </main>
+
+  <script src="script.js"></script>
+</body>
+</html>
