@@ -123,7 +123,9 @@ StopWatch/
 Proteus/
   StopWatch.pdsprj        Proteus simulation project
 docs/
-  report.pdf              Project report
+  PROJECT_REVIEW.md       Detailed review and analysis
+  GITHUB_SETUP.md         GitHub setup guide
+  images/                 Screenshots used in this README
 ```
 
 ## Build Instructions
@@ -142,6 +144,26 @@ File -> Import -> Existing Projects into Workspace
 7. Use the generated HEX file from the build output.
 
 For Proteus simulation, open `StopWatch.pdsprj`, select the STM32 microcontroller, load `StopWatch.hex`, and set the MCU clock frequency to 16 MHz.
+
+## Simulation Screenshots
+
+### Proteus Schematic Overview
+
+![Proteus schematic overview](docs/images/proteus-schematic-overview.png)
+
+This screenshot shows the complete Proteus schematic before running the simulation. The STM32F401VETx is connected to the 16x2 LCD, two push buttons, an LED with a 330 ohm resistor, a buzzer, a speaker model, reset/boot resistors, power, and ground. It is useful for checking the wiring and the pin connections used by the firmware.
+
+### Running Stopwatch Simulation
+
+![Proteus running stopwatch simulation](docs/images/proteus-running-stopwatch.png)
+
+This screenshot shows the Proteus simulation while the stopwatch is running. The LCD displays the elapsed time and the current LED blink delay. The Start/Pause and speed buttons are connected on the right side of the microcontroller, and the LED and buzzer outputs show the live behavior of the firmware during simulation.
+
+### STM32CubeMX Pinout Configuration
+
+![STM32CubeMX pinout configuration](docs/images/cubemx-pinout-configuration.png)
+
+This screenshot shows the STM32CubeMX pinout view for the STM32F401VETx. It highlights the GPIO pins used by the project: PE4 for the external interrupt button, PE5 for the speed button, PC13 for the LED, PB6 for the buzzer, and the PB pins used for the LCD data/control lines. TIM2 is also enabled for stopwatch timing.
 
 ## Important Notes
 
