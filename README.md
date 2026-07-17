@@ -1,32 +1,20 @@
-# STM32F401VETx LCD Stopwatch
+# My STM32 LCD Stopwatch Project
 
 ![MCU](https://img.shields.io/badge/MCU-STM32F401VETx-blue)
 ![Language](https://img.shields.io/badge/Language-C-informational)
 ![IDE](https://img.shields.io/badge/IDE-STM32CubeIDE-orange)
 ![Simulation](https://img.shields.io/badge/Simulation-Proteus-green)
-![Style](https://img.shields.io/badge/Code-Register_Level-lightgrey)
+![Web](https://img.shields.io/badge/Web_Demo-HTML_CSS_JS-teal)
 
-## Overview
+So basically, this is my microcontroller course project: a stopwatch built with an STM32F401VETx, a 16x2 LCD, two buttons, one LED, and a buzzer. It sounds simple at first, like "yeah just count time and show it on LCD", but honestly the timing, interrupts, and LCD wiring made it way more interesting than I expected.
 
-This project implements a stopwatch on an STM32F401VETx microcontroller. The stopwatch time is shown on a 16x2 character LCD. A Start/Pause button controls the stopwatch, a second button changes the LED blink speed, and a buzzer gives a short beep on even-numbered stopwatch seconds.
+The main idea is that the STM32 counts milliseconds using TIM2, shows the time on the LCD, lets me start/pause it with a button, changes the LED blinking speed with another button, and makes the buzzer beep for a short moment on even-numbered seconds. I also made a frontend web demo for it, because opening Proteus every time just to explain the project is kinda annoying.
 
-The final firmware is written with direct register access instead of HAL function calls. STM32CubeMX/STM32CubeIDE were used for project setup and build support. The repository also includes a polished frontend-only web interface in `web_demo/` that presents the hardware project as an interactive product demo.
+Project repository:
 
-## Features
-
-- Premium frontend-only interactive web demo
-- Stopwatch with millisecond counter
-- TIM2 interrupt every 1 ms for stopwatch timing
-- Start/Pause button using EXTI4 on PE4
-- Speed button on PE5
-- LED blink output on PC13
-- Buzzer output on PB6
-- 16x2 LCD in 4-bit mode
-- LCD refresh every 50 ms
-- Register-level GPIO, timer, SysTick, EXTI, RCC, and NVIC setup
-- Proteus simulation project included
-
-## 🌐 Web Demo
+```text
+https://github.com/mohadesehesmaeilzadeh/stm32-lcd-stopwatch
+```
 
 Live demo placeholder:
 
@@ -34,44 +22,135 @@ Live demo placeholder:
 https://mohadesehesmaeilzadeh.github.io/stm32-lcd-stopwatch/web_demo/
 ```
 
-Enable GitHub Pages from the repository settings to make this URL active.
+## Why I Made This
 
-This repository includes a premium frontend-only simulator that runs directly in the browser:
-
-```text
-web_demo/
-  index.html
-  styles.css
-  script.js
-  assets/images/
-  scripts/capture-screenshot.js
-```
-
-The web demo visualizes the same behavior as the embedded project:
-
-- LCD display with `MM:SS.mmm RUN/PAU`
-- Start/Pause and Reset controls
-- LED speed button with the same delay sequence used in firmware
-- Animated LED and buzzer state
-- Optional browser sound for buzzer pulses
-- Runtime event log
-- SysTick, TIM2, LCD, and EXTI4 activity indicators
-- Premium landing-page sections for overview, architecture, features, technologies, how it works, gallery, and GitHub CTA
-- Project screenshots from Proteus and STM32CubeMX
-
-### Latest Web Interface Screenshot
-
-![Latest web demo screenshot](web_demo/assets/images/screenshot-latest.png)
-
-### Run Locally
-
-Option 1: open the static file directly:
+This project was made for my microcontroller/microprocessor course. Replace this with your real class info if needed:
 
 ```text
-web_demo/index.html
+Course: Microcontroller / Microprocessor
+Professor: [Professor Name]
+Semester / Date: [Semester or Date]
+Student: Mohadeseh Esmaeilzade
 ```
 
-Option 2: run a local static server:
+I wanted something that was more than the usual LED blink example. Don't get me wrong, blinking an LED is the hello world of embedded systems, but after doing it a few times you start wanting something that feels like an actual device. A stopwatch was a good choice because it needs timers, GPIO, interrupts, display handling, and a little bit of user interaction.
+
+Also, fun fact: the LCD part was more annoying than the timer part. One wrong pin or one bad delay and the display just sits there like nothing happened. Note to self: always check the LCD contrast pin before blaming the code.
+
+## What It Does
+
+When the system starts, the LCD shows the stopwatch time in this format:
+
+```text
+MM:SS.mmm PAU
+LED:3000 ms
+```
+
+`PAU` means the stopwatch is paused. When I press the Start/Pause button, it changes to `RUN` and the milliseconds start counting. The second button changes the LED blink delay through this sequence:
+
+```text
+3000 ms -> 1500 ms -> 750 ms -> 375 ms -> 3000 ms
+```
+
+The buzzer gives a short pulse when the stopwatch reaches a new even second, like 2 seconds, 4 seconds, 6 seconds and so on. It's not supposed to play music or anything fancy, just a simple "hey, something happened" beep.
+
+## How It Works, Without Making It Sound Too Scary
+
+The STM32 uses the internal HSI clock at 16 MHz. TIM2 is configured to create a 1 ms interrupt. Every time that interrupt happens, the code checks if the stopwatch is running. If yes, it increments `stopwatch_ms`. If not, it leaves the counter alone.
+
+The PE4 button is connected as an external interrupt using EXTI4. That button toggles the stopwatch between running and paused. The PE5 button is polled in the main loop and changes the LED delay. I know polling is not always the prettiest method, but for this button it was simple and worked fine.
+
+The LCD is connected in 4-bit mode, so it uses fewer pins than 8-bit mode. The main loop refreshes the LCD about every 50 ms. The LED is on PC13 and the buzzer is on PB6. Most of the runtime logic is written with direct register access instead of using HAL functions, because the point of this project was to understand what the microcontroller is actually doing.
+
+Here is the rough architecture:
+
+```text
+Buttons PE4 / PE5
+       |
+       v
+STM32F401VETx
+  - RCC clock setup
+  - GPIO setup
+  - TIM2 1 ms interrupt
+  - EXTI4 start/pause interrupt
+  - SysTick helper delay
+       |
+       v
+LCD display + PC13 LED + PB6 buzzer
+```
+
+## Pins I Used
+
+| Function | STM32 Pin | Small note |
+|---|---:|---|
+| LCD RS | PB0 | LCD register select |
+| LCD E | PB1 | LCD enable |
+| LCD D4 | PB2 | 4-bit LCD data |
+| LCD D5 | PB10 | 4-bit LCD data |
+| LCD D6 | PB13 | 4-bit LCD data |
+| LCD D7 | PB12 | 4-bit LCD data |
+| LCD RW | GND | Write-only mode |
+| Start/Pause button | PE4 | EXTI4 input with pull-up |
+| Speed button | PE5 | Input with pull-up |
+| LED | PC13 | Digital output |
+| Buzzer | PB6 | Digital output |
+
+## The Code And Folders
+
+The important firmware file is:
+
+```text
+StopWatch/Core/Src/main.c
+```
+
+That is where the actual stopwatch behavior lives: clock setup, GPIO setup, LCD functions, TIM2 setup, EXTI4 setup, button handling, LED blinking, buzzer logic, and LCD formatting.
+
+Some other files are generated or used by STM32CubeIDE, but they still matter:
+
+```text
+StopWatch/Core/Inc/        Header files
+StopWatch/Core/Src/        C source files
+StopWatch/Core/Startup/    Startup assembly file
+StopWatch/StopWatch.ioc    STM32CubeMX configuration
+Proteus/StopWatch.pdsprj   Proteus simulation project
+release/StopWatch.hex      Built firmware file for simulation
+docs/                      Extra review and setup notes
+web_demo/                  Frontend web demo
+```
+
+The CubeMX-generated files are kept because the project still needs them for building properly in STM32CubeIDE. The custom logic is mainly in `main.c`.
+
+## Proteus Simulation
+
+The Proteus project is included here:
+
+```text
+Proteus/StopWatch.pdsprj
+```
+
+To run it, open the Proteus file, load the HEX file into the STM32 model, and make sure the MCU clock is set to 16 MHz. The LCD, LED, buzzer, and buttons are all wired in the schematic.
+
+### Proteus schematic
+
+![Proteus schematic overview](docs/images/proteus-schematic-overview.png)
+
+### Running simulation
+
+![Proteus running stopwatch simulation](docs/images/proteus-running-stopwatch.png)
+
+### CubeMX pinout
+
+![STM32CubeMX pinout configuration](docs/images/cubemx-pinout-configuration.png)
+
+## Web Demo
+
+I also added a web version of the project inside `web_demo/`. It doesn't connect to the real STM32, it just simulates the behavior visually in the browser. No backend. No database. Just HTML, CSS, and JavaScript.
+
+It has a virtual LCD, Start/Pause and Reset buttons, LED speed control, buzzer state, event log, timing indicators, dark/light mode, and screenshots from the real Proteus/CubeMX setup. I made this mostly so the project looks easier to understand on GitHub.
+
+![Web Demo Screenshot](web_demo/assets/images/screenshot-latest.png)
+
+Run it locally like this:
 
 ```bash
 cd web_demo
@@ -84,17 +163,9 @@ Then open:
 http://localhost:8000
 ```
 
-### Automatic Screenshot Update
+If you just want to open it quickly, opening `web_demo/index.html` in a browser also works.
 
-The README screenshot is stored at:
-
-```text
-web_demo/assets/images/screenshot-latest.png
-```
-
-The README always links to that same file, so replacing it updates the displayed screenshot automatically.
-
-To regenerate the screenshot after changing the design:
+To update the screenshot used in this README:
 
 ```bash
 cd web_demo
@@ -102,218 +173,62 @@ npm install
 npm run screenshot
 ```
 
-The script `web_demo/scripts/capture-screenshot.js` opens `web_demo/index.html` with Playwright and overwrites `web_demo/assets/images/screenshot-latest.png`.
-
-### Deploy With GitHub Pages
-
-1. Push the repository to GitHub.
-2. Open the repository on GitHub.
-3. Go to `Settings -> Pages`.
-4. Under `Build and deployment`, choose `Deploy from a branch`.
-5. Select branch `main` and folder `/root`.
-6. Save the settings.
-7. Open:
+That command uses Playwright and updates:
 
 ```text
-https://mohadesehesmaeilzadeh.github.io/stm32-lcd-stopwatch/web_demo/
+web_demo/assets/images/screenshot-latest.png
 ```
 
-Other free hosting options: Vercel, Netlify, and Cloudflare Pages. Because the demo is static HTML/CSS/JavaScript, no backend or database is required.
+## Building The STM32 Project
 
-## Previous Web Demo Screenshots
+Open STM32CubeIDE, import the `StopWatch` folder as an existing project, and build it. If STM32CubeIDE complains about missing STM32Cube firmware packages, install the STM32Cube FW F4 package first.
 
-### Browser Simulator Overview
-
-![Browser simulator overview](docs/images/web-demo-overview.png)
-
-This screenshot shows the initial browser demo state. The virtual LCD is paused at `00:00.000`, the STM32F401VETx chip is represented in the center of the board, and the control panel shows the same timing concepts used in the firmware: TIM2 tick, LED delay, SysTick activity, GPIO groups, and EXTI4 input.
-
-### Running Browser Simulation
-
-![Running browser stopwatch simulation](docs/images/web-demo-running.png)
-
-This screenshot shows the web simulator while the stopwatch is running. The LCD changes to `RUN`, the stopwatch counter increases, the status indicator turns green, and the simulation speed slider can be used to observe TIM2/LCD/LED behavior faster than real time. This makes the embedded project easier to explain without opening STM32CubeIDE or Proteus.
-
-## Hardware
-
-| Part | Description |
-|---|---|
-| Microcontroller | STM32F401VETx |
-| Display | 16x2 character LCD, LM016L or compatible |
-| Buttons | 2 push buttons |
-| LED | 1 LED with current-limiting resistor |
-| Buzzer | Active buzzer or speaker model for simulation |
-| Potentiometer | 10k for LCD contrast |
-| Simulation | Proteus 8 Professional |
-
-## Pin Connections
-
-| Function | STM32 pin | Notes |
-|---|---:|---|
-| LCD RS | PB0 | Register select |
-| LCD E | PB1 | Enable |
-| LCD D4 | PB2 | LCD data bit 4 |
-| LCD D5 | PB10 | LCD data bit 5 |
-| LCD D6 | PB13 | LCD data bit 6 |
-| LCD D7 | PB12 | LCD data bit 7 |
-| LCD RW | GND | Write-only mode |
-| LCD VSS | GND | Ground |
-| LCD VDD | +5V | LCD supply in Proteus |
-| LCD VEE | Potentiometer wiper | Contrast |
-| Start/Pause button | PE4 | Input with pull-up, EXTI4 falling edge |
-| Speed button | PE5 | Input with pull-up |
-| LED | PC13 | Digital output |
-| Buzzer | PB6 | Digital output |
-
-## Architecture
-
-```text
-Reset
-  -> Clock_Init()       : enable HSI, use 16 MHz system clock
-  -> SysTick_Init()     : create helper 1 ms counter
-  -> GPIO_Init()        : configure LCD, buttons, LED, buzzer
-  -> TIM2_Init()        : configure 1 ms stopwatch interrupt
-  -> EXTI4_Init()       : configure Start/Pause button interrupt
-  -> LCD_Init()         : initialize LCD in 4-bit mode
-  -> main loop
-       - poll speed button
-       - update LED
-       - process buzzer rule
-       - refresh LCD every 50 ms
-
-Interrupts:
-  SysTick_Handler       : increments sys_ms
-  TIM2_IRQHandler       : increments stopwatch_ms when running
-  EXTI4_IRQHandler      : toggles Start/Pause with debounce
-```
-
-## How It Works
-
-TIM2 is configured to generate an interrupt every 1 ms. When the stopwatch is running, the TIM2 interrupt increments `stopwatch_ms`. The LCD displays the value as:
-
-```text
-MM:SS.mmm RUN
-```
-
-or:
-
-```text
-MM:SS.mmm PAU
-```
-
-The PE4 button toggles between running and paused. The PE5 button changes the LED blink period in this sequence:
-
-```text
-3000 ms -> 1500 ms -> 750 ms -> 375 ms -> 3000 ms
-```
-
-The buzzer turns on for 100 ms when the stopwatch reaches a new even-numbered second while running.
-
-## Project Structure
-
-```text
-StopWatch/
-  Core/
-    Inc/                  Header files
-    Src/
-      main.c              Main register-level application
-      gpio.c              CubeMX-generated GPIO file
-      tim.c               CubeMX-generated TIM2 file
-      stm32f4xx_it.c      CubeMX interrupt file, selected handlers commented
-      system_stm32f4xx.c  CMSIS system file
-      syscalls.c          Newlib syscall stubs
-      sysmem.c            Heap support
-    Startup/
-      startup_stm32f401vetx.s
-  STM32F401VETX_FLASH.ld  Flash linker script
-  STM32F401VETX_RAM.ld    RAM linker script
-  StopWatch.ioc           CubeMX configuration
-  Debug/                  Build output, usually ignored in Git
-Proteus/
-  StopWatch.pdsprj        Proteus simulation project
-docs/
-  PROJECT_REVIEW.md       Detailed review and analysis
-  GITHUB_SETUP.md         GitHub setup guide
-  images/                 Screenshots used in this README
-web_demo/
-  index.html              Premium web interface
-  styles.css              Web demo styling
-  script.js               Interactive simulator logic
-  package.json            Screenshot helper dependency/script
-  scripts/
-    capture-screenshot.js Updates assets/images/screenshot-latest.png
-  assets/
-    images/               Web, Proteus, and CubeMX screenshots
-```
-
-## Final Git Commands
-
-Use this sequence when you are ready to push the current version:
-
-```bash
-git status
-git add README.md .gitignore web_demo
-git add -u index.html styles.css script.js
-git commit -m "Add premium web demo interface"
-git push origin main
-```
-
-## Build Instructions
-
-1. Install STM32CubeIDE.
-2. Open STM32CubeIDE.
-3. Import the project folder:
+The normal flow is:
 
 ```text
 File -> Import -> Existing Projects into Workspace
+Select StopWatch/
+Build Project
 ```
 
-4. Select the `StopWatch` folder.
-5. Make sure the STM32Cube FW F4 package is installed.
-6. Build the project.
-7. Use the generated HEX file from the build output.
+For Proteus, use the generated HEX file. I included a release HEX file already, but if you change the code, rebuild the firmware and load the new HEX into Proteus.
 
-For Proteus simulation, open `StopWatch.pdsprj`, select the STM32 microcontroller, load `StopWatch.hex`, and set the MCU clock frequency to 16 MHz.
+## Things That Were Weird Or Annoying
 
-## Simulation Screenshots
+The LCD timing was probably the most annoying part. Sometimes the code looked right, but the LCD showed nothing. In those moments the problem was usually wiring, contrast, or a delay being too short.
 
-### Proteus Schematic Overview
+Interrupts were also a bit tricky. If the same handler exists in more than one place, the build can fail or the wrong behavior happens. So if CubeMX regenerates code later, the interrupt handlers should be checked carefully, especially:
 
-![Proteus schematic overview](docs/images/proteus-schematic-overview.png)
+```text
+SysTick_Handler
+TIM2_IRQHandler
+EXTI4_IRQHandler
+```
 
-This screenshot shows the complete Proteus schematic before running the simulation. The STM32F401VETx is connected to the 16x2 LCD, two push buttons, an LED with a 330 ohm resistor, a buzzer, a speaker model, reset/boot resistors, power, and ground. It is useful for checking the wiring and the pin connections used by the firmware.
+Another thing: PC13 can behave differently depending on the actual board, especially because many STM32 boards connect the onboard LED in a different polarity. In Proteus it behaves according to this schematic, but real hardware may need a small adjustment.
 
-### Running Stopwatch Simulation
+## What I Learned
 
-![Proteus running stopwatch simulation](docs/images/proteus-running-stopwatch.png)
+I learned that timers are not just "delay but better". They are basically the heart of this kind of project. Once TIM2 was working correctly, the stopwatch became much easier to manage.
 
-This screenshot shows the Proteus simulation while the stopwatch is running. The LCD displays the elapsed time and the current LED blink delay. The Start/Pause and speed buttons are connected on the right side of the microcontroller, and the LED and buzzer outputs show the live behavior of the firmware during simulation.
+I also got more comfortable with register-level programming. HAL is convenient, but writing to registers makes it clearer what is happening behind the scenes. It's slower to write at first, but honestly it makes the microcontroller feel less like a black box.
 
-### STM32CubeMX Pinout Configuration
+If I did this again, I would probably clean up the LCD driver into separate `.c` and `.h` files instead of keeping so much in `main.c`. I would also add a real hardware reset button and maybe use a timer/PWM output for the buzzer instead of just toggling a GPIO.
 
-![STM32CubeMX pinout configuration](docs/images/cubemx-pinout-configuration.png)
-
-This screenshot shows the STM32CubeMX pinout view for the STM32F401VETx. It highlights the GPIO pins used by the project: PE4 for the external interrupt button, PE5 for the speed button, PC13 for the LED, PB6 for the buzzer, and the PB pins used for the LCD data/control lines. TIM2 is also enabled for stopwatch timing.
-
-## Important Notes
-
-- The final application code uses direct register access and avoids HAL calls in the runtime logic.
-- CubeMX-generated files are still present as project support files.
-- If CubeMX regenerates code, check interrupt handlers carefully to avoid duplicate definitions of `SysTick_Handler`, `TIM2_IRQHandler`, and `EXTI4_IRQHandler`.
-- For real hardware, drive the buzzer through a transistor if its current is higher than the GPIO pin can safely provide.
-- PC13 LED polarity may differ on real development boards.
-
-## Known Limitations
-
-- No reset button is implemented.
-- LCD writes are blocking.
-- The active source and CubeMX `.ioc` settings should be kept synchronized before long-term maintenance.
-- The generated Debug makefile may contain local absolute paths. Regenerate the build files in STM32CubeIDE if building on another computer.
+Long story short: it works, it simulates, and now it even has a web demo. Not bad for a course project.
 
 ## Credits
 
-Course project for a microcontroller/microprocessor class.
+Made for a microcontroller/microprocessor course project.
 
-Authors:
+Author:
 
-- Mohadeseh Esmaeilzade
+```text
+Mohadeseh Esmaeilzade
+```
+
+Repository:
+
+```text
+https://github.com/mohadesehesmaeilzadeh/stm32-lcd-stopwatch
+```
