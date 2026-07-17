@@ -8,13 +8,7 @@
 
 So basically, this is my microcontroller course project: a stopwatch built with an STM32F401VETx, a 16x2 LCD, two buttons, one LED, and a buzzer. It sounds simple at first, like "yeah just count time and show it on LCD", but honestly the timing, interrupts, and LCD wiring made it way more interesting than I expected.
 
-The main idea is that the STM32 counts milliseconds using TIM2, shows the time on the LCD, lets me start/pause it with a button, changes the LED blinking speed with another button, and makes the buzzer beep for a short moment on even-numbered seconds. I also made a frontend web demo for it, because opening Proteus every time just to explain the project is kinda annoying.
-
-Project repository:
-
-```text
-https://github.com/mohadesehesmaeilzadeh/stm32-lcd-stopwatch
-```
+The main idea is that the STM32 counts milliseconds using TIM2, shows the time on the LCD, lets me start/pause it with a button, changes the LED blinking speed with another button, and makes the buzzer beep for a short moment on even-numbered seconds. I also made a frontend web demo for it, because opening Proteus every time just to explain the project is kinda annoying. The web demo is not the real hardware of course, but it makes the idea way easier to understand from the README.
 
 Live demo placeholder:
 
@@ -24,12 +18,11 @@ https://mohadesehesmaeilzadeh.github.io/stm32-lcd-stopwatch/web_demo/
 
 ## Why I Made This
 
-This project was made for my microcontroller/microprocessor course. Replace this with your real class info if needed:
+This project was made for my microcontroller/microprocessor course:
 
 ```text
 Course: Microcontroller / Microprocessor
-Professor: [Professor Name]
-Semester / Date: [Semester or Date]
+Semester / Date: Spring of 2026
 Student: Mohadeseh Esmaeilzade
 ```
 
@@ -144,11 +137,28 @@ To run it, open the Proteus file, load the HEX file into the STM32 model, and ma
 
 ## Web Demo
 
-I also added a web version of the project inside `web_demo/`. It doesn't connect to the real STM32, it just simulates the behavior visually in the browser. No backend. No database. Just HTML, CSS, and JavaScript.
+I also added a web version of the project inside `web_demo/`. It doesn't connect to the real STM32, it just simulates the behavior visually in the browser. No backend. No database. Just HTML, CSS, and JavaScript. I wanted it to feel more like a small product page than a plain school-project folder, because the embedded part is easier to explain when people can click something and see the logic moving.
 
-It has a virtual LCD, Start/Pause and Reset buttons, LED speed control, buzzer state, event log, timing indicators, dark/light mode, and screenshots from the real Proteus/CubeMX setup. I made this mostly so the project looks easier to understand on GitHub.
+The demo has a virtual LCD, Start/Pause and Reset buttons, LED speed control, buzzer state, event log, timing indicators, dark/light mode, and screenshots from the real Proteus/CubeMX setup. The cool part is that it mirrors the same basic behavior as the STM32 firmware: the LCD switches between `RUN` and `PAU`, the LED delay changes through the same values, and the buzzer indicator reacts when the simulated stopwatch reaches even seconds.
+
+The web demo is useful for three things:
+
+```text
+1. Showing the project quickly without STM32CubeIDE or Proteus
+2. Explaining the flow between timer, buttons, LCD, LED, and buzzer
+3. Making the GitHub repository look more complete and easier to grade/read
+```
 
 ![Web Demo Screenshot](web_demo/assets/images/screenshot-latest.png)
+
+Inside the demo folder, the files are pretty straightforward:
+
+```text
+web_demo/index.html     Main page layout
+web_demo/styles.css     Visual design, responsive layout, dark/light mode
+web_demo/script.js      Stopwatch simulation and UI behavior
+web_demo/assets/images  Screenshots used by the page and README
+```
 
 Run it locally like this:
 
@@ -225,10 +235,4 @@ Author:
 
 ```text
 Mohadeseh Esmaeilzade
-```
-
-Repository:
-
-```text
-https://github.com/mohadesehesmaeilzadeh/stm32-lcd-stopwatch
 ```
