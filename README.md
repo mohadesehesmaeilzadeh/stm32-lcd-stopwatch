@@ -16,6 +16,18 @@ Live demo placeholder:
 https://mohadesehesmaeilzadeh.github.io/stm32-lcd-stopwatch/web_demo/
 ```
 
+## Quick Project Preview
+
+Before going into the details, these are the main parts of the project visually. I think the screenshots explain the idea faster than a long paragraph, especially for the LCD and Proteus wiring.
+
+| Web demo landing page | Proteus running mode |
+|---|---|
+| ![Latest web demo screenshot](web_demo/assets/images/screenshot-latest.png) | ![Proteus running stopwatch simulation](docs/images/proteus-running-stopwatch.png) |
+
+| Browser simulator overview | Browser simulator running |
+|---|---|
+| ![Browser simulator overview](docs/images/web-demo-overview.png) | ![Running browser stopwatch simulation](docs/images/web-demo-running.png) |
+
 ## Why I Made This
 
 This project was made for my microcontroller/microprocessor course:
@@ -150,6 +162,16 @@ The web demo is useful for three things:
 ```
 
 ![Web Demo Screenshot](web_demo/assets/images/screenshot-latest.png)
+
+Here are the older web-demo captures too. I kept them because they show the simulator from a different angle, especially the control panel and running state.
+
+### Web demo overview
+
+![Browser simulator overview](docs/images/web-demo-overview.png)
+
+### Web demo while running
+
+![Running browser stopwatch simulation](docs/images/web-demo-running.png)
 
 Inside the demo folder, the files are pretty straightforward:
 
