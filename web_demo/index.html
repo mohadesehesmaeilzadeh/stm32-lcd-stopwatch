@@ -1,0 +1,261 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>STM32 LCD Stopwatch Interface</title>
+  <meta name="description" content="Premium frontend web interface and simulator for an STM32F401VETx LCD stopwatch project.">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <header class="site-header">
+    <a class="brand" href="#top" aria-label="STM32 LCD Stopwatch home">
+      <span class="brand-mark">ST</span>
+      <span>STM32 StopWatch</span>
+    </a>
+    <nav aria-label="Page navigation">
+      <a href="#overview">Overview</a>
+      <a href="#architecture">Architecture</a>
+      <a href="#demo">Demo</a>
+      <a href="#gallery">Gallery</a>
+    </nav>
+    <button class="theme-toggle" id="themeToggle" type="button" aria-label="Toggle light and dark mode">
+      <span class="theme-icon" aria-hidden="true"></span>
+      <span id="themeText">Light</span>
+    </button>
+  </header>
+
+  <main id="top">
+    <section class="hero-section">
+      <div class="hero-copy">
+        <p class="eyebrow">Register-level embedded project</p>
+        <h1>STM32 LCD Stopwatch, reimagined as a polished web experience.</h1>
+        <p class="hero-lead">
+          A premium frontend showcase for a real STM32F401VETx stopwatch project, with a browser-based simulator that visualizes TIM2 timing, EXTI button control, GPIO outputs, LCD refresh, LED blinking, and buzzer events.
+        </p>
+        <div class="hero-actions">
+          <a class="btn primary" href="#demo">Launch simulator</a>
+          <a class="btn secondary" href="https://github.com/mohadesehesmaeilzadeh/stm32-lcd-stopwatch" target="_blank" rel="noreferrer">View GitHub</a>
+        </div>
+        <div class="hero-metrics" aria-label="Project highlights">
+          <div><strong>1 ms</strong><span>TIM2 tick</span></div>
+          <div><strong>16 MHz</strong><span>HSI clock</span></div>
+          <div><strong>4-bit</strong><span>LCD mode</span></div>
+        </div>
+      </div>
+
+      <div class="hero-device" aria-label="Live interface preview">
+        <div class="device-topline">
+          <span class="live-dot"></span>
+          <span id="heroState">PAUSED</span>
+        </div>
+        <div class="glass-board">
+          <div class="lcd-card">
+            <span>LM016L DISPLAY</span>
+            <div class="lcd-screen" aria-live="polite">
+              <div id="heroLcdLine1">00:00.000 PAU</div>
+              <div id="heroLcdLine2">LED:3000 ms</div>
+            </div>
+          </div>
+          <div class="chip-card">
+            <span class="chip-logo">ST</span>
+            <strong>STM32F401VETx</strong>
+            <small>Cortex-M4 / LQFP100</small>
+          </div>
+          <div class="hero-led" id="heroLed"><span></span><strong>PC13</strong></div>
+          <div class="hero-buzzer" id="heroBuzzer"><span></span><strong>PB6</strong></div>
+          <div class="circuit-line line-a"></div>
+          <div class="circuit-line line-b"></div>
+          <div class="circuit-line line-c"></div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="overview">
+      <div class="section-heading">
+        <p class="eyebrow">Project overview</p>
+        <h2>A hardware project with a modern software story.</h2>
+        <p>
+          The original firmware runs on an STM32F401VETx and avoids HAL calls in the main behavior. This web interface makes the embedded logic easier to present by turning the circuit into an interactive visual product page.
+        </p>
+      </div>
+      <div class="feature-grid">
+        <article class="feature-card">
+          <span class="icon-chip">TM</span>
+          <h3>Timer-driven stopwatch</h3>
+          <p>TIM2 creates a 1 ms timebase and increments the stopwatch only while the system is running.</p>
+        </article>
+        <article class="feature-card">
+          <span class="icon-chip">EX</span>
+          <h3>Interrupt button control</h3>
+          <p>PE4 is mapped to EXTI4 so the Start/Pause action behaves like the physical button in Proteus.</p>
+        </article>
+        <article class="feature-card">
+          <span class="icon-chip">IO</span>
+          <h3>GPIO output simulation</h3>
+          <p>The LCD, LED, and buzzer are represented with visual state changes, pulses, and event logs.</p>
+        </article>
+        <article class="feature-card">
+          <span class="icon-chip">UI</span>
+          <h3>Frontend-only demo</h3>
+          <p>No backend, no database, and no deployment complexity. The demo is static HTML, CSS, and JavaScript.</p>
+        </article>
+      </div>
+    </section>
+
+    <section class="section architecture-section" id="architecture">
+      <div class="section-heading compact">
+        <p class="eyebrow">Block diagram</p>
+        <h2>Microcontroller architecture visualization</h2>
+      </div>
+      <div class="architecture-map" aria-label="System architecture diagram">
+        <div class="arch-node input">PE4 / PE5<br><span>Buttons</span></div>
+        <div class="arch-node core">STM32F401VETx<br><span>RCC + NVIC + Main loop</span></div>
+        <div class="arch-node timer">TIM2<br><span>1 ms interrupt</span></div>
+        <div class="arch-node helper">SysTick<br><span>Helper timing</span></div>
+        <div class="arch-node output">LCD + LED + Buzzer<br><span>GPIO outputs</span></div>
+        <svg class="arch-lines" viewBox="0 0 1000 360" role="img" aria-label="Signal flow from buttons and timers into the STM32 core and outputs">
+          <path d="M190 110 C260 110 300 175 385 175" />
+          <path d="M500 80 C500 120 500 135 500 155" />
+          <path d="M500 280 C500 240 500 220 500 205" />
+          <path d="M615 175 C710 175 760 110 835 110" />
+        </svg>
+      </div>
+    </section>
+
+    <section class="section tech-section">
+      <div class="section-heading compact">
+        <p class="eyebrow">Technologies used</p>
+        <h2>Embedded firmware plus a frontend presentation layer.</h2>
+      </div>
+      <div class="badge-row">
+        <span>STM32F401VETx</span>
+        <span>C language</span>
+        <span>Register-level programming</span>
+        <span>STM32CubeIDE</span>
+        <span>STM32CubeMX</span>
+        <span>Proteus</span>
+        <span>HTML</span>
+        <span>CSS</span>
+        <span>JavaScript</span>
+      </div>
+    </section>
+
+    <section class="section how-section">
+      <div class="section-heading compact">
+        <p class="eyebrow">How it works</p>
+        <h2>From button press to LCD update.</h2>
+      </div>
+      <div class="steps">
+        <div><span>01</span><strong>Clock setup</strong><p>HSI runs the system at 16 MHz so timing stays predictable in Proteus.</p></div>
+        <div><span>02</span><strong>TIM2 interrupt</strong><p>The timer generates a 1 ms event and updates `stopwatch_ms` only when running.</p></div>
+        <div><span>03</span><strong>Button input</strong><p>EXTI4 toggles Start/Pause, while PE5 cycles the LED delay values.</p></div>
+        <div><span>04</span><strong>Main loop output</strong><p>The LCD refresh, LED blink, and even-second buzzer pulse are handled outside the timer ISR.</p></div>
+      </div>
+    </section>
+
+    <section class="section demo-section" id="demo">
+      <div class="section-heading">
+        <p class="eyebrow">Interactive simulation</p>
+        <h2>Control the virtual hardware.</h2>
+        <p>Use the simulator like the real circuit. Start the stopwatch, change LED speed, enable sound, and watch the peripheral state update live.</p>
+      </div>
+
+      <div class="simulator-shell">
+        <div class="sim-board">
+          <div class="lcd-module">
+            <span>LCD1 / LM016L</span>
+            <div class="lcd-screen" aria-live="polite">
+              <div id="lcdLine1">00:00.000 PAU</div>
+              <div id="lcdLine2">LED:3000 ms</div>
+            </div>
+          </div>
+          <div class="microchip">
+            <span>ST</span>
+            <strong>STM32F401VETx</strong>
+            <small>PB0 PB1 PB2 PB10 PB12 PB13 PB6 PC13 PE4 PE5</small>
+          </div>
+          <button class="hardware-button red" id="extiButton" type="button">PE4</button>
+          <button class="hardware-button blue" id="speedHardwareButton" type="button">PE5</button>
+          <div class="led-lamp" id="ledLamp"><span></span><strong>PC13 LED</strong></div>
+          <div class="buzzer-lamp" id="buzzerLamp"><span></span><strong>PB6 BUZZER</strong></div>
+        </div>
+
+        <aside class="control-panel">
+          <div class="status-card">
+            <span class="status-dot" id="statusDot"></span>
+            <strong id="systemStatus">Paused</strong>
+          </div>
+          <div class="control-grid">
+            <button class="btn primary" id="startPauseButton" type="button">Start</button>
+            <button class="btn secondary" id="resetButton" type="button">Reset</button>
+            <button class="btn secondary" id="speedButton" type="button">LED Speed</button>
+            <button class="btn secondary" id="soundButton" type="button" aria-pressed="false">Sound Off</button>
+          </div>
+          <label class="range-control" for="timeScale">
+            <span>Simulation speed</span>
+            <strong id="timeScaleValue">1x</strong>
+            <input id="timeScale" type="range" min="1" max="20" value="1">
+          </label>
+          <div class="metrics">
+            <div><span>Stopwatch</span><strong id="metricStopwatch">0 ms</strong></div>
+            <div><span>LED delay</span><strong id="metricLedDelay">3000 ms</strong></div>
+            <div><span>Timer</span><strong>1 ms</strong></div>
+            <div><span>Buzzer</span><strong>Even sec</strong></div>
+          </div>
+          <div class="trace-panel">
+            <div class="trace-row"><span>SysTick</span><i id="systickPulse"></i></div>
+            <div class="trace-row"><span>TIM2</span><i id="tim2Pulse"></i></div>
+            <div class="trace-row"><span>LCD</span><i id="lcdPulse"></i></div>
+            <div class="trace-row"><span>EXTI4</span><i id="extiPulse"></i></div>
+          </div>
+        </aside>
+      </div>
+
+      <div class="event-shell">
+        <h3>Runtime event log</h3>
+        <ol id="eventLog" class="event-log"></ol>
+      </div>
+    </section>
+
+    <section class="section gallery-section" id="gallery">
+      <div class="section-heading compact">
+        <p class="eyebrow">Gallery</p>
+        <h2>Simulation and configuration evidence.</h2>
+      </div>
+      <div class="gallery-grid">
+        <article>
+          <img src="assets/images/proteus-schematic-overview.png" alt="Proteus schematic overview">
+          <h3>Proteus schematic</h3>
+          <p>Complete circuit wiring with LCD, buttons, LED, buzzer, reset and boot support.</p>
+        </article>
+        <article>
+          <img src="assets/images/proteus-running-stopwatch.png" alt="Proteus simulation running">
+          <h3>Running simulation</h3>
+          <p>The LCD displays elapsed time and current LED delay while the circuit is animated.</p>
+        </article>
+        <article>
+          <img src="assets/images/cubemx-pinout-configuration.png" alt="STM32CubeMX pinout configuration">
+          <h3>CubeMX pinout</h3>
+          <p>Pinout setup for PE4, PE5, PC13, PB6, LCD pins, and TIM2.</p>
+        </article>
+      </div>
+    </section>
+
+    <section class="cta-section">
+      <div>
+        <p class="eyebrow">Open source project</p>
+        <h2>Explore the firmware, simulation, and web interface.</h2>
+      </div>
+      <a class="btn primary" href="https://github.com/mohadesehesmaeilzadeh/stm32-lcd-stopwatch" target="_blank" rel="noreferrer">Open GitHub Repository</a>
+    </section>
+  </main>
+
+  <footer>
+    <span>STM32 LCD Stopwatch</span>
+    <span>Frontend simulator for a microcontroller course project.</span>
+  </footer>
+
+  <script src="script.js"></script>
+</body>
+</html>

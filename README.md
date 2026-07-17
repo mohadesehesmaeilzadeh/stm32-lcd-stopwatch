@@ -10,11 +10,11 @@
 
 This project implements a stopwatch on an STM32F401VETx microcontroller. The stopwatch time is shown on a 16x2 character LCD. A Start/Pause button controls the stopwatch, a second button changes the LED blink speed, and a buzzer gives a short beep on even-numbered stopwatch seconds.
 
-The final firmware is written with direct register access instead of HAL function calls. STM32CubeMX/STM32CubeIDE were used for project setup and build support.
+The final firmware is written with direct register access instead of HAL function calls. STM32CubeMX/STM32CubeIDE were used for project setup and build support. The repository also includes a polished frontend-only web interface in `web_demo/` that presents the hardware project as an interactive product demo.
 
 ## Features
 
-- Frontend-only interactive web demo
+- Premium frontend-only interactive web demo
 - Stopwatch with millisecond counter
 - TIM2 interrupt every 1 ms for stopwatch timing
 - Start/Pause button using EXTI4 on PE4
@@ -26,14 +26,25 @@ The final firmware is written with direct register access instead of HAL functio
 - Register-level GPIO, timer, SysTick, EXTI, RCC, and NVIC setup
 - Proteus simulation project included
 
-## Web Demo
+## 🌐 Web Demo
 
-This repository includes a frontend-only simulator that runs directly in the browser:
+Live demo placeholder:
 
 ```text
-index.html
-styles.css
-script.js
+https://mohadesehesmaeilzadeh.github.io/stm32-lcd-stopwatch/web_demo/
+```
+
+Enable GitHub Pages from the repository settings to make this URL active.
+
+This repository includes a premium frontend-only simulator that runs directly in the browser:
+
+```text
+web_demo/
+  index.html
+  styles.css
+  script.js
+  assets/images/
+  scripts/capture-screenshot.js
 ```
 
 The web demo visualizes the same behavior as the embedded project:
@@ -45,11 +56,71 @@ The web demo visualizes the same behavior as the embedded project:
 - Optional browser sound for buzzer pulses
 - Runtime event log
 - SysTick, TIM2, LCD, and EXTI4 activity indicators
+- Premium landing-page sections for overview, architecture, features, technologies, how it works, gallery, and GitHub CTA
 - Project screenshots from Proteus and STM32CubeMX
 
-To run it locally, open `index.html` in a browser. If GitHub Pages is enabled for this repository, the same demo can be hosted as a static site without any backend or database.
+### Latest Web Interface Screenshot
 
-## Web Demo Screenshots
+![Latest web demo screenshot](web_demo/assets/images/screenshot-latest.png)
+
+### Run Locally
+
+Option 1: open the static file directly:
+
+```text
+web_demo/index.html
+```
+
+Option 2: run a local static server:
+
+```bash
+cd web_demo
+python -m http.server 8000
+```
+
+Then open:
+
+```text
+http://localhost:8000
+```
+
+### Automatic Screenshot Update
+
+The README screenshot is stored at:
+
+```text
+web_demo/assets/images/screenshot-latest.png
+```
+
+The README always links to that same file, so replacing it updates the displayed screenshot automatically.
+
+To regenerate the screenshot after changing the design:
+
+```bash
+cd web_demo
+npm install
+npm run screenshot
+```
+
+The script `web_demo/scripts/capture-screenshot.js` opens `web_demo/index.html` with Playwright and overwrites `web_demo/assets/images/screenshot-latest.png`.
+
+### Deploy With GitHub Pages
+
+1. Push the repository to GitHub.
+2. Open the repository on GitHub.
+3. Go to `Settings -> Pages`.
+4. Under `Build and deployment`, choose `Deploy from a branch`.
+5. Select branch `main` and folder `/root`.
+6. Save the settings.
+7. Open:
+
+```text
+https://mohadesehesmaeilzadeh.github.io/stm32-lcd-stopwatch/web_demo/
+```
+
+Other free hosting options: Vercel, Netlify, and Cloudflare Pages. Because the demo is static HTML/CSS/JavaScript, no backend or database is required.
+
+## Previous Web Demo Screenshots
 
 ### Browser Simulator Overview
 
@@ -164,9 +235,27 @@ docs/
   PROJECT_REVIEW.md       Detailed review and analysis
   GITHUB_SETUP.md         GitHub setup guide
   images/                 Screenshots used in this README
-index.html                Browser simulator
-styles.css                Web demo styling
-script.js                 Web demo behavior
+web_demo/
+  index.html              Premium web interface
+  styles.css              Web demo styling
+  script.js               Interactive simulator logic
+  package.json            Screenshot helper dependency/script
+  scripts/
+    capture-screenshot.js Updates assets/images/screenshot-latest.png
+  assets/
+    images/               Web, Proteus, and CubeMX screenshots
+```
+
+## Final Git Commands
+
+Use this sequence when you are ready to push the current version:
+
+```bash
+git status
+git add README.md .gitignore web_demo
+git add -u index.html styles.css script.js
+git commit -m "Add premium web demo interface"
+git push origin main
 ```
 
 ## Build Instructions

@@ -1,0 +1,13 @@
+{
+  "name": "stm32-lcd-stopwatch-web-demo",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Frontend-only simulator and landing page for the STM32 LCD stopwatch project.",
+  "scripts": {
+    "serve": "python -m http.server 8000",
+    "screenshot": "node scripts/capture-screenshot.js"
+  },
+  "devDependencies": {
+    "playwright": "^1.61.1"
+  }
+}

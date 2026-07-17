@@ -33,6 +33,18 @@ cmake-build-*/
 RemoteSystemsTempFiles/
 *.launch
 *.log
+work-http-*.log
+
+# Web demo dependencies and generated hosting files
+web_demo/node_modules/
+web_demo/.cache/
+web_demo/dist/
+web_demo/.vercel/
+web_demo/.netlify/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
 
 # Proteus temporary/user files
 *.workspace
