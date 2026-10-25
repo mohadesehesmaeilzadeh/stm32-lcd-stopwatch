@@ -249,7 +249,7 @@ Long story short: it works, it simulates, and now it even has a web demo. Not ba
 
 Made for a microcontroller/microprocessor course project.
 
-Author:
+Authors:
 
 ```text
 Mohadeseh Esmaeilzade
