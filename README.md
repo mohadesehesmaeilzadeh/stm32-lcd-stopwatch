@@ -1,4 +1,4 @@
-# My STM32 LCD Stopwatch Project
+# STM32 LCD Stopwatch Project
 
 ![MCU](https://img.shields.io/badge/MCU-STM32F401VETx-blue)
 ![Language](https://img.shields.io/badge/Language-C-informational)
@@ -6,7 +6,7 @@
 ![Simulation](https://img.shields.io/badge/Simulation-Proteus-green)
 ![Web](https://img.shields.io/badge/Web_Demo-HTML_CSS_JS-teal)
 
-So basically, this is my microcontroller course project: a stopwatch built with an STM32F401VETx, a 16x2 LCD, two buttons, one LED, and a buzzer. It sounds simple at first, like "yeah just count time and show it on LCD", but honestly the timing, interrupts, and LCD wiring made it way more interesting than I expected.
+So basically, this is our microcontroller course project: a stopwatch built with an STM32F401VETx, a 16x2 LCD, two buttons, one LED, and a buzzer. It sounds simple at first, like "yeah just count time and show it on LCD", but honestly the timing, interrupts, and LCD wiring made it way more interesting than we expected.
 
 The main idea is that the STM32 counts milliseconds using TIM2, shows the time on the LCD, lets me start/pause it with a button, changes the LED blinking speed with another button, and makes the buzzer beep for a short moment on even-numbered seconds. I also made a frontend web demo for it, because opening Proteus every time just to explain the project is kinda annoying. The web demo is not the real hardware of course, but it makes the idea way easier to understand from the README.
 
@@ -18,7 +18,7 @@ https://mohadesehesmaeilzadeh.github.io/stm32-lcd-stopwatch/web_demo/
 
 ## Quick Project Preview
 
-Before going into the details, these are the main parts of the project visually. I think the screenshots explain the idea faster than a long paragraph, especially for the LCD and Proteus wiring.
+Before going into the details, these are the main parts of the project visually. we think the screenshots explain the idea faster than a long paragraph, especially for the LCD and Proteus wiring.
 
 | Web demo landing page | Proteus running mode |
 |---|---|
@@ -30,15 +30,11 @@ Before going into the details, these are the main parts of the project visually.
 
 ## Why I Made This
 
-This project was made for my microcontroller/microprocessor course:
+This project was made for our microcontroller/microprocessor course:
 
-```text
-Course: Microcontroller / Microprocessor
-Semester / Date: Spring of 2026
-Student: Mohadeseh Esmaeilzade
-```
 
-I wanted something that was more than the usual LED blink example. Don't get me wrong, blinking an LED is the hello world of embedded systems, but after doing it a few times you start wanting something that feels like an actual device. A stopwatch was a good choice because it needs timers, GPIO, interrupts, display handling, and a little bit of user interaction.
+
+we wanted something that was more than the usual LED blink example. blinking an LED is the hello world of embedded systems, but after doing it a few times you start wanting something that feels like an actual device. A stopwatch was a good choice because it needs timers, GPIO, interrupts, display handling, and a little bit of user interaction.
 
 Also, fun fact: the LCD part was more annoying than the timer part. One wrong pin or one bad delay and the display just sits there like nothing happened. Note to self: always check the LCD contrast pin before blaming the code.
 
@@ -149,7 +145,7 @@ To run it, open the Proteus file, load the HEX file into the STM32 model, and ma
 
 ## Web Demo
 
-I also added a web version of the project inside `web_demo/`. It doesn't connect to the real STM32, it just simulates the behavior visually in the browser. No backend. No database. Just HTML, CSS, and JavaScript. I wanted it to feel more like a small product page than a plain school-project folder, because the embedded part is easier to explain when people can click something and see the logic moving.
+We also added a web version of the project inside `web_demo/`. It doesn't connect to the real STM32, it just simulates the behavior visually in the browser. No backend. No database. Just HTML, CSS, and JavaScript. We wanted it to feel more like a small product page than a plain school-project folder, because the embedded part is easier to explain when people can click something and see the logic moving.
 
 The demo has a virtual LCD, Start/Pause and Reset buttons, LED speed control, buzzer state, event log, timing indicators, dark/light mode, and screenshots from the real Proteus/CubeMX setup. The cool part is that it mirrors the same basic behavior as the STM32 firmware: the LCD switches between `RUN` and `PAU`, the LED delay changes through the same values, and the buzzer indicator reacts when the simulated stopwatch reaches even seconds.
 
@@ -163,7 +159,7 @@ The web demo is useful for three things:
 
 ![Web Demo Screenshot](web_demo/assets/images/screenshot-latest.png)
 
-Here are the older web-demo captures too. I kept them because they show the simulator from a different angle, especially the control panel and running state.
+Here are the older web-demo captures too. We kept them because they show the simulator from a different angle, especially the control panel and running state.
 
 ### Web demo overview
 
@@ -239,13 +235,13 @@ EXTI4_IRQHandler
 
 Another thing: PC13 can behave differently depending on the actual board, especially because many STM32 boards connect the onboard LED in a different polarity. In Proteus it behaves according to this schematic, but real hardware may need a small adjustment.
 
-## What I Learned
+## What We Learned
 
-I learned that timers are not just "delay but better". They are basically the heart of this kind of project. Once TIM2 was working correctly, the stopwatch became much easier to manage.
+We learned that timers are not just "delay but better". They are basically the heart of this kind of project. Once TIM2 was working correctly, the stopwatch became much easier to manage.
 
-I also got more comfortable with register-level programming. HAL is convenient, but writing to registers makes it clearer what is happening behind the scenes. It's slower to write at first, but honestly it makes the microcontroller feel less like a black box.
+We also got more comfortable with register-level programming. HAL is convenient, but writing to registers makes it clearer what is happening behind the scenes. It's slower to write at first, but honestly it makes the microcontroller feel less like a black box.
 
-If I did this again, I would probably clean up the LCD driver into separate `.c` and `.h` files instead of keeping so much in `main.c`. I would also add a real hardware reset button and maybe use a timer/PWM output for the buzzer instead of just toggling a GPIO.
+If We did this again, We would probably clean up the LCD driver into separate `.c` and `.h` files instead of keeping so much in `main.c`. We would also add a real hardware reset button and maybe use a timer/PWM output for the buzzer instead of just toggling a GPIO.
 
 Long story short: it works, it simulates, and now it even has a web demo. Not bad for a course project.
 
@@ -257,4 +253,5 @@ Author:
 
 ```text
 Mohadeseh Esmaeilzade
+Negar Siyahmansour
 ```
