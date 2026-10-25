@@ -241,7 +241,7 @@ We learned that timers are not just "delay but better". They are basically the h
 
 We also got more comfortable with register-level programming. HAL is convenient, but writing to registers makes it clearer what is happening behind the scenes. It's slower to write at first, but honestly it makes the microcontroller feel less like a black box.
 
-If We did this again, We would probably clean up the LCD driver into separate `.c` and `.h` files instead of keeping so much in `main.c`. We would also add a real hardware reset button and maybe use a timer/PWM output for the buzzer instead of just toggling a GPIO.
+If We did this again, we would probably clean up the LCD driver into separate `.c` and `.h` files instead of keeping so much in `main.c`. We would also add a real hardware reset button and maybe use a timer/PWM output for the buzzer instead of just toggling a GPIO.
 
 Long story short: it works, it simulates, and now it even has a web demo. Not bad for a course project.
 
@@ -252,6 +252,6 @@ Made for a microcontroller/microprocessor course project.
 Authors:
 
 ```text
-Mohadeseh Esmaeilzade
-Negar Siyahmansour
+- Mohadeseh Esmaeilzade
+- Negar Siyahmansour
 ```
